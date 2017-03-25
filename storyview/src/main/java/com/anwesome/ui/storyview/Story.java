@@ -74,6 +74,8 @@ public class Story {
                 status.draw(canvas,paint);
                 if(!stopped) {
                     trackingBar.update(status.getTime());
+                    StoryAnimation storyAnimation = new StoryAnimation(Story.this,-1);
+                    storyAnimation.start();
                 }
                 if(status.shouldStop()) {
                     if(currIndex<statuses.size()-1) {
