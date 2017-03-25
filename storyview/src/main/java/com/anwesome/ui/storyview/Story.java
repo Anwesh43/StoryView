@@ -26,10 +26,10 @@ public class Story {
     public void addStatus(Status status) {
         statuses.add(status);
     }
-    public void show(Activity activity) {
+    public void show() {
         if(storyView == null) {
             storyView = new StoryView(activity);
-            activity.addContentView(storyView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            activity.setContentView(storyView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
     }
     private class StoryView extends View{
