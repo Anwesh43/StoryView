@@ -18,7 +18,7 @@ public class Status {
     private String day,timeString;
     private TimeTracker timeTracker;
     private boolean stop = false;
-    private int w,h,dir = 0;
+    private int w,h,dir = 1;
     private int time = 0;
     public void init() {
         time = 0;
@@ -57,13 +57,14 @@ public class Status {
             w = canvas.getWidth();
             h = canvas.getHeight();
             initBitmapSize();
-            timeTracker = new TimeTracker(w-w/10,h/20,w/20);
+            timeTracker = new TimeTracker(w-w/10,h/20,w/25);
         }
-        paint.setTextSize(w/40);
+        paint.setTextSize(w/30);
         canvas.drawColor(Color.BLACK);
         paint.setColor(Color.parseColor("#FAFAFA"));
-        canvas.drawText(title,w/2-paint.measureText(title)/2,4*h/5,paint);
-        canvas.drawText(day+","+timeString,w/20,w/10+w/15,paint);
+        paint.setTextSize(w/20);
+        canvas.drawText(title,w/2-paint.measureText(title)/2,9*h/10,paint);
+        canvas.drawText(day+","+timeString,w/20,h/10+w/15,paint);
         canvas.drawBitmap(statusBitmap,w/5,h/5,paint);
         timeTracker.draw(canvas,paint);
         time+=dir;
@@ -77,7 +78,7 @@ public class Status {
     }
     private void initBitmapSize() {
         if(statusBitmap!=null) {
-            statusBitmap = Bitmap.createScaledBitmap(statusBitmap,3*w/5,3*h/5,true);
+            statusBitmap = Bitmap.createScaledBitmap(statusBitmap,w,3*h/5,true);
         }
     }
     public boolean shouldStop() {
