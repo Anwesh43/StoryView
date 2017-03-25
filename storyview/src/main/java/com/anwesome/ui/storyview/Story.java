@@ -1,7 +1,6 @@
 package com.anwesome.ui.storyview;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.*;
