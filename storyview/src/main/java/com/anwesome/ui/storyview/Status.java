@@ -65,7 +65,7 @@ public class Status {
         paint.setTextSize(w/20);
         canvas.drawText(title,w/2-paint.measureText(title)/2,9*h/10,paint);
         canvas.drawText(day+","+timeString,w/20,h/10+w/15,paint);
-        canvas.drawBitmap(statusBitmap,w/5,h/5,paint);
+        canvas.drawBitmap(statusBitmap,0,h/5,paint);
         timeTracker.draw(canvas,paint);
         time+=dir;
         timeTracker.update();
