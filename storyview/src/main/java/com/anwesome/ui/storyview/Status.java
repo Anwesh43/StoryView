@@ -72,7 +72,11 @@ public class Status {
         timeTracker.update();
         if(time == StoryConstants.STATUS_INTERVAL) {
             stop = true;
+            dir = 0;
         }
+    }
+    public boolean isPaused() {
+        return !stop && dir == 0;
     }
     public int getTime() {
         return  time;

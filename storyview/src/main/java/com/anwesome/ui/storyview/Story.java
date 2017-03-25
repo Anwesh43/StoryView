@@ -1,8 +1,12 @@
 package com.anwesome.ui.storyview;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.*;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -17,13 +21,16 @@ public class Story {
     private Profile profile;
     private List<Status> statuses = new ArrayList<>();
     private Activity activity;
+    private List<TrackingBar> trackingBars = new ArrayList<>();
     private int w,h;
     private int currIndex = 0;
     private boolean stopped = false;
     private float trackingBarW = 0,trackingH = 10;
+    private GestureDetector gestureDetector;
     private StoryView storyView;
     private Story(Activity activity) {
         this.activity = activity;
+        gestureDetector = new GestureDetector(activity,new StoryGestureListener());
     }
     public static Story getInstance(Activity activity) {
         return new Story(activity);
@@ -33,6 +40,7 @@ public class Story {
     }
     public void show() {
         if(storyView == null) {
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             storyView = new StoryView(activity);
             activity.addContentView(storyView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -49,10 +57,14 @@ public class Story {
     public StoryView getStoryView() {
         return storyView;
     }
+    public void stop(int dir) {
+        stopped = true;
+        StoryAnimation storyAnimation = new StoryAnimation(this,dir);
+        storyAnimation.start();
+    }
     private class StoryView extends View{
         private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private int render = 0;
-        private List<TrackingBar> trackingBars = new ArrayList<>();
         public StoryView(Context context) {
             super(context);
         }
@@ -80,9 +92,7 @@ public class Story {
                         currIndex++;
                     }
                     else {
-                        stopped = true;
-                        StoryAnimation storyAnimation = new StoryAnimation(Story.this,-1);
-                        storyAnimation.start();
+                        stop(-1);
                     }
                 }
             }
@@ -102,6 +112,15 @@ public class Story {
                 }
             }
         }
+        public boolean onTouchEvent(MotionEvent event) {
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                if(statuses.size()>0 && currIndex<=statuses.size()-1 && statuses.get(currIndex).isPaused()) {
+                    statuses.get(currIndex).resume();
+                    return true;
+                }
+            }
+            return gestureDetector.onTouchEvent(event);
+        }
     }
     private class TrackingBar {
         private float x,y=0,w=0,maxW;
@@ -118,6 +137,38 @@ public class Story {
         }
         public void update(int time) {
             w = maxW*((time*1.0f)/StoryConstants.STATUS_INTERVAL);
+        }
+    }
+    private class StoryGestureListener extends GestureDetector.SimpleOnGestureListener{
+        public boolean onDown(MotionEvent event) {
+            return true;
+        }
+        public boolean onSingleTapUp(MotionEvent event) {
+            if(!stopped && statuses.size()>0) {
+                if(currIndex<statuses.size()-1) {
+                    TrackingBar currTrackingBar = trackingBars.get(currIndex);
+                    currTrackingBar.w = currTrackingBar.maxW;
+                    currIndex++;
+                }
+                else if(currIndex == statuses.size()-1){
+                    stop(-1);
+
+                }
+            }
+
+            return true;
+        }
+        public void onShowPress(MotionEvent event) {
+            if(!stopped && statuses.size()>0) {
+                statuses.get(currIndex).pause();
+            }
+        }
+        public boolean onFling(MotionEvent e1,MotionEvent e2,float velx,float vely) {
+            if (Math.abs(velx) > Math.abs(vely) && !stopped) {
+                float diff = e2.getX()-e1.getX();
+                stop((int)(diff/Math.abs(diff)));
+            }
+            return true;
         }
     }
 }
