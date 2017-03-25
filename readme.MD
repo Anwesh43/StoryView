@@ -36,4 +36,4 @@
 
 ### Demo
 
-![Output sample](https://github.com/Anwesh43/StoryView/blob/master/screenshots/storyview.gif =200x400)
+![Output sample](https://github.com/Anwesh43/StoryView/blob/master/screenshots/storyview.gif | width=200 | height=400)
