@@ -14,6 +14,7 @@ import java.util.List;
  * Created by anweshmishra on 25/03/17.
  */
 public class Story {
+    private Profile profile;
     private List<Status> statuses = new ArrayList<>();
     private Activity activity;
     private int currIndex = 0;
@@ -34,6 +35,11 @@ public class Story {
             activity.addContentView(storyView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
     }
+    public void setProfilePart(Bitmap bitmap,String title) {
+        if(profile == null) {
+            profile = Profile.getInstance(bitmap, title);
+        }
+    }
     private class StoryView extends View{
         private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private int w,h;
@@ -47,6 +53,9 @@ public class Story {
                 if(status.shouldStop()) {
                     currIndex++;
                 }
+            }
+            if(profile!=null) {
+                profile.draw(canvas,paint);
             }
             try {
                 Thread.sleep(100);
