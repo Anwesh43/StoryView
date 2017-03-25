@@ -19,6 +19,7 @@ public class Story {
     private Activity activity;
     private int w,h;
     private int currIndex = 0;
+    private boolean stopped = false;
     private float trackingBarW = 0,trackingH = 10;
     private StoryView storyView;
     private Story(Activity activity) {
@@ -41,6 +42,12 @@ public class Story {
         if(profile == null) {
             profile = Profile.getInstance(bitmap, title);
         }
+    }
+    public int getH() {
+        return  h;
+    }
+    public StoryView getStoryView() {
+        return storyView;
     }
     private class StoryView extends View{
         private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -65,9 +72,16 @@ public class Story {
                 Status status = statuses.get(currIndex);
                 TrackingBar trackingBar = trackingBars.get(currIndex);
                 status.draw(canvas,paint);
-                trackingBar.update(status.getTime());
+                if(!stopped) {
+                    trackingBar.update(status.getTime());
+                }
                 if(status.shouldStop()) {
-                    currIndex++;
+                    if(currIndex<statuses.size()-1) {
+                        currIndex++;
+                    }
+                    else {
+                        stopped = true;
+                    }
                 }
             }
             for(TrackingBar trackingBar:trackingBars) {
@@ -77,12 +91,13 @@ public class Story {
                 profile.draw(canvas,paint);
             }
             render++;
-            try {
-                Thread.sleep(100);
-                invalidate();
-            }
-            catch (Exception ex) {
+            if(!stopped) {
+                try {
+                    Thread.sleep(100);
+                    invalidate();
+                } catch (Exception ex) {
 
+                }
             }
         }
     }
