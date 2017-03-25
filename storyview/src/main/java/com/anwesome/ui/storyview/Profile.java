@@ -20,18 +20,18 @@ public class Profile {
         if(render == 0) {
             w = canvas.getWidth();
             h = canvas.getHeight();
-            bitmap = Bitmap.createScaledBitmap(bitmap,w/20,w/20,true);
+            bitmap = Bitmap.createScaledBitmap(bitmap,h/12,h/12,true);
         }
         canvas.save();
-        canvas.translate(w/10,w/10);
+        canvas.translate(h/20,h/15);
         Path path = new Path();
-        path.addCircle(0,0,w/40, Path.Direction.CCW);
+        path.addCircle(0,0,h/30, Path.Direction.CCW);
         canvas.clipPath(path);
         canvas.drawBitmap(bitmap,-bitmap.getWidth()/2,-bitmap.getHeight()/2,paint);
         canvas.restore();
         paint.setColor(Color.parseColor("#FAFAFA"));
         paint.setTextSize(w/20);
-        canvas.drawText(name,w/5,w/10,paint);
+        canvas.drawText(name,h/24+h/20,h/15+paint.getTextSize()/2,paint);
         render++;
     }
 }
