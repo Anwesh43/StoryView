@@ -59,6 +59,7 @@ public class Status {
             initBitmapSize();
             timeTracker = new TimeTracker(w-w/10,h/20,w/25);
         }
+        paint.setStyle(Paint.Style.FILL);
         paint.setTextSize(w/30);
         canvas.drawColor(Color.BLACK);
         paint.setColor(Color.parseColor("#FAFAFA"));

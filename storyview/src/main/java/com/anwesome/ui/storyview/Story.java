@@ -17,7 +17,9 @@ public class Story {
     private Profile profile;
     private List<Status> statuses = new ArrayList<>();
     private Activity activity;
+    private int w,h;
     private int currIndex = 0;
+    private float trackingBarW = 0,trackingH = 10;
     private StoryView storyView;
     private Story(Activity activity) {
         this.activity = activity;
@@ -42,21 +44,39 @@ public class Story {
     }
     private class StoryView extends View{
         private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private int w,h;
+        private int render = 0;
+        private List<TrackingBar> trackingBars = new ArrayList<>();
         public StoryView(Context context) {
             super(context);
         }
         public void onDraw(Canvas canvas) {
+            if(render == 0) {
+                w = canvas.getWidth();
+                h = canvas.getHeight();
+                if(statuses.size()>0) {
+                    trackingBarW = (w)/(statuses.size());
+                    trackingH = h/200;
+                    for(int i=0;i<statuses.size();i++) {
+                        trackingBars.add(new TrackingBar(i*trackingBarW));
+                    }
+                }
+            }
             if(currIndex<statuses.size()) {
                 Status status = statuses.get(currIndex);
+                TrackingBar trackingBar = trackingBars.get(currIndex);
                 status.draw(canvas,paint);
+                trackingBar.update(status.getTime());
                 if(status.shouldStop()) {
                     currIndex++;
                 }
             }
+            for(TrackingBar trackingBar:trackingBars) {
+                trackingBar.draw(canvas,paint);
+            }
             if(profile!=null) {
                 profile.draw(canvas,paint);
             }
+            render++;
             try {
                 Thread.sleep(100);
                 invalidate();
@@ -64,6 +84,23 @@ public class Story {
             catch (Exception ex) {
 
             }
+        }
+    }
+    private class TrackingBar {
+        private float x,y=0,w=0,maxW;
+        public TrackingBar(float x) {
+            this.x = x;
+            this.maxW = trackingBarW*0.95f;
+        }
+        public void draw(Canvas canvas,Paint paint) {
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(Color.parseColor("#FAFAFA"));
+            canvas.drawRoundRect(new RectF(x,y,x+w,y+trackingH),trackingH/2,trackingH/2,paint);
+            paint.setStyle(Paint.Style.STROKE);
+            canvas.drawRoundRect(new RectF(x,y,x+maxW,y+trackingH),trackingH/2,trackingH/2,paint);
+        }
+        public void update(int time) {
+            w = maxW*((time*1.0f)/StoryConstants.STATUS_INTERVAL);
         }
     }
 }
