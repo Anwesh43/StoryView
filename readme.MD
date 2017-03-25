@@ -33,3 +33,7 @@
 ```
     story.show();
 ```
+
+### Demo
+
+![Output sample](https://github.com/Anwesh43/StoryView/blob/master/screenshots/storyview.gif)
