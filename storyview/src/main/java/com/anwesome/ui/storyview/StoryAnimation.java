@@ -12,8 +12,7 @@ public class StoryAnimation implements ValueAnimator.AnimatorUpdateListener {
     public void onAnimationUpdate(ValueAnimator valueAnimator) {
         if(story!=null && story.getStoryView()!=null) {
             View view = story.getStoryView();
-            view.setY((float)valueAnimator.getAnimatedValue());
-            view.setX((float)valueAnimator.getAnimatedValue()/2);
+            view.setX((float)valueAnimator.getAnimatedValue());
         }
     }
     public StoryAnimation(Story story,int dir) {
@@ -22,8 +21,12 @@ public class StoryAnimation implements ValueAnimator.AnimatorUpdateListener {
     }
     public void start() {
         if(story!=null) {
-            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0,dir*story.getH());
-            valueAnimator.setDuration(500);
+            View storyView = story.getStoryView();
+            if(storyView!=null) {
+                storyView.setRotation(StoryConstants.STORY_DEG*dir);
+            }
+            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0,dir*story.getW()*1.5f);
+            valueAnimator.setDuration(StoryConstants.ANIM_DURATION);
             valueAnimator.addUpdateListener(this);
             valueAnimator.start();
         }

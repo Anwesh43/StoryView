@@ -43,8 +43,8 @@ public class Story {
             profile = Profile.getInstance(bitmap, title);
         }
     }
-    public int getH() {
-        return  h;
+    public int getW() {
+        return  w;
     }
     public StoryView getStoryView() {
         return storyView;
@@ -74,8 +74,6 @@ public class Story {
                 status.draw(canvas,paint);
                 if(!stopped) {
                     trackingBar.update(status.getTime());
-                    StoryAnimation storyAnimation = new StoryAnimation(Story.this,-1);
-                    storyAnimation.start();
                 }
                 if(status.shouldStop()) {
                     if(currIndex<statuses.size()-1) {
@@ -83,6 +81,8 @@ public class Story {
                     }
                     else {
                         stopped = true;
+                        StoryAnimation storyAnimation = new StoryAnimation(Story.this,-1);
+                        storyAnimation.start();
                     }
                 }
             }
