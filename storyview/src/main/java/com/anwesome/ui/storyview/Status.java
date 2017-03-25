@@ -14,8 +14,9 @@ import java.util.Date;
  */
 public class Status {
     private Bitmap statusBitmap;
-    private String title,profileName;
+    private String title;
     private String day,timeString;
+    private TimeTracker timeTracker;
     private boolean stop = false;
     private int w,h,dir = 0;
     private int time = 0;
@@ -56,12 +57,15 @@ public class Status {
             w = canvas.getWidth();
             h = canvas.getHeight();
             initBitmapSize();
+            timeTracker = new TimeTracker(w-w/10,h/20,w/20);
         }
         paint.setTextSize(w/20);
         canvas.drawColor(Color.BLACK);
         canvas.drawText(day+","+timeString,w/20,w/10+w/15,paint);
         canvas.drawBitmap(statusBitmap,w/5,h/5,paint);
+        timeTracker.draw(canvas,paint);
         time+=dir;
+        timeTracker.update();
         if(time == StoryConstants.STATUS_INTERVAL) {
             stop = true;
         }
