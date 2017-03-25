@@ -59,8 +59,10 @@ public class Status {
             initBitmapSize();
             timeTracker = new TimeTracker(w-w/10,h/20,w/20);
         }
-        paint.setTextSize(w/20);
+        paint.setTextSize(w/40);
         canvas.drawColor(Color.BLACK);
+        paint.setColor(Color.parseColor("#FAFAFA"));
+        canvas.drawText(title,w/2-paint.measureText(title)/2,4*h/5,paint);
         canvas.drawText(day+","+timeString,w/20,w/10+w/15,paint);
         canvas.drawBitmap(statusBitmap,w/5,h/5,paint);
         timeTracker.draw(canvas,paint);
